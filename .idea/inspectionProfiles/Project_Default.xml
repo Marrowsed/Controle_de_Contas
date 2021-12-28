@@ -1,0 +1,15 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="django.db.models.fields.related.OneToOneField.first_name" />
+          <option value="django.db.models.fields.related.OneToOneField.last_name" />
+          <option value="total.contas.models.Pedido.id" />
+          <option value="django.db.models.fields.related.ForeignKey.nome" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
