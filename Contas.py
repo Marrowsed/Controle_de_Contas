@@ -3,10 +3,10 @@ import Banco
 from Poupanca import Poupanca
 
 
-class Contas(Poupanca):
+class Contas:
 
-    def __init__(self, pessoa: Pessoa, banco: Banco):
-        super().__init__()
+    def __init__(self, pessoa: Pessoa, banco: Banco, poupanca: Poupanca):
+        self.poupanca = poupanca
         self._pessoa = pessoa
         self._banco = banco
         self._value = 0
@@ -90,16 +90,15 @@ class Contas(Poupanca):
                 print("Saldo Indisponível")
             else:
                 valor = float(input("Digite o valor: R$").replace(",", "."))
-                self.aplicar(valor)
-                print(self.saldo)
+                self.poupanca.aplicar(valor)
                 self.balanco[self._banco][0] -= valor
                 self.contas_corrente.append(("Aplicou", f"R${valor}"))
         elif escolha == 4:
-            if super().saldo <= 0:
+            if self.poupanca.saldo <= 0:
                 print("Saldo insuficiente !")
             else:
                 valor = float(input("Digite o valor: R$").replace(",", "."))
-                super().resgatar(valor)
+                self.poupanca.resgatar(valor)
                 self.balanco[self._banco][0] += valor
                 self.contas_corrente.append(("Resgatou", f"R${valor}"))
         else:
