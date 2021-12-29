@@ -165,13 +165,13 @@ class Contas:
 
     def adiciona_compra_corrente(self, compra, valor):
         self.balanco[self._banco][0] -= valor
-        self.contas_corrente.append((compra, valor))
+        self.contas_corrente.append((F"Compra: {compra}", f"R${valor}"))
 
     def mostra_extrato(self):
         if len(self.contas_corrente) == 0:
             print("Não há movimento !")
         else:
-            print("NOME DA COMPRA, VALOR")
+            print("NOME DA AÇÃO, VALOR")
             for i in self.contas_corrente:
                 print(i)
         print(f"C/C: R${self.balanco[self._banco][0]}")
