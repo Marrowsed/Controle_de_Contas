@@ -1,10 +1,12 @@
 import Pessoa
 import Banco
+from Poupanca import Poupanca
 
 
-class Contas:
+class Contas(Poupanca):
 
     def __init__(self, pessoa: Pessoa, banco: Banco):
+        super().__init__()
         self._pessoa = pessoa
         self._banco = banco
         self._value = 0
@@ -13,6 +15,26 @@ class Contas:
         self.contas_credito = []
         self.parceladas = []
         self.balanco = {}
+
+    @property
+    def pessoa(self):
+        return self._pessoa
+
+    @property
+    def banco(self):
+        return self._banco
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value = value
+
+    @property
+    def credito(self):
+        return self._credito
 
     def balancos(self):
         value = float(input("Digite o saldo da C/C: ").replace(",", "."))
@@ -43,11 +65,15 @@ class Contas:
 
     def add_contas_corrente(self):
         print("---------------------------------------")
-        print("1 - Adicionar Saldo")
+        print("1 - Adicionar Saldo na C/C")
         print("---------------------------------------")
-        print("2 - Retirar Saldo")
+        print("2 - Retirar Saldo da C/C")
         print("---------------------------------------")
-        print("3 - Sair")
+        print("3 - Acionar na Poupança")
+        print("---------------------------------------")
+        print("4 - Resgatar da Poupança")
+        print("---------------------------------------")
+        print("5 - Sair")
         print("---------------------------------------")
         escolha = int(input("O que deseja fazer: "))
         if escolha == 1:
@@ -59,6 +85,23 @@ class Contas:
             else:
                 valor = float(input("Digite o valor: R$").replace(",", "."))
                 self.desconta_corrente(valor)
+        elif escolha == 3:
+            if self.balanco[self._banco][0] <= 0:
+                print("Saldo Indisponível")
+            else:
+                valor = float(input("Digite o valor: R$").replace(",", "."))
+                self.aplicar(valor)
+                print(self.saldo)
+                self.balanco[self._banco][0] -= valor
+                self.contas_corrente.append(("Aplicou", f"R${valor}"))
+        elif escolha == 4:
+            if super().saldo <= 0:
+                print("Saldo insuficiente !")
+            else:
+                valor = float(input("Digite o valor: R$").replace(",", "."))
+                super().resgatar(valor)
+                self.balanco[self._banco][0] += valor
+                self.contas_corrente.append(("Resgatou", f"R${valor}"))
         else:
             pass
 
@@ -85,11 +128,11 @@ class Contas:
 
     def conta_credito(self):
         print("---------------------------------------")
-        print("1 - Adicionar Contas À Vista e Parceladas")
+        print("1 - Adicionar Compras")
         print("---------------------------------------")
         print("2 - Saldo do Crédito")
         print("---------------------------------------")
-        print("3 - Ver as contas")
+        print("3 - Verificar o Extrato")
         print("---------------------------------------")
         print("4 - Sair")
         print("---------------------------------------")
@@ -148,7 +191,7 @@ class Contas:
 
     def show_contas_lista(self):
         if len(self.contas_credito) == 0:
-            print("Não há contas !")
+            print("Não há compras !")
         else:
             print("NOME DA CONTA, VALOR, PARCELAS")
             for i in self.contas_credito:
