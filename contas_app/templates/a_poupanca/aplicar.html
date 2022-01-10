@@ -24,7 +24,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'banco' conta.banco.id %}">
+                <a class="nav-link" href="{% url 'banco' conta_pag.banco.id %}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -125,7 +125,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Banco: {{conta.banco.nome}}</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Banco: {{conta_pag.banco.nome}}</h1>
                     </div>
 
                     <!-- Content Row -->
@@ -156,7 +156,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Conta Corrente</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.corrente}}</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta_pag.corrente}}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -166,7 +166,7 @@
                             </div>
                         </div>
 
-                        {% if conta.corrente == 0 %}
+                        {% if conta_pag.corrente == 0 %}
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-danger shadow h-100 py-2">
                                 <div class="card-body">
@@ -186,6 +186,7 @@
                         <form action="" method="POST">
                             {% csrf_token %}
                                 {{form_aciona.as_p}}
+                                {{form_extrato.as_p}}
                         <input type="submit" value="Acionar" class="btn btn-outline-success  btn-sm btn-block">
                         </form>
                         {% endif %}
