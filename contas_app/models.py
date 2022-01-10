@@ -25,7 +25,7 @@ class Cliente(models.Model):
     sobrenome = models.CharField(max_length=200, null=True)
 
     def __str__(self):
-        return self.nome + " " + self.sobrenome
+        return f"{self.nome} {self.sobrenome}"
 
 
 class Conta(models.Model):
@@ -36,7 +36,7 @@ class Conta(models.Model):
     cliente = models.ForeignKey(Cliente, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "Conta do Banco: " + self.banco.nome
+        return f"Conta do Banco: {self.banco.nome}"
 
 
 class Extrato(models.Model):
@@ -46,11 +46,14 @@ class Extrato(models.Model):
         ("Comprou", "Comprou"),
         ("Parcelou", "Parcelou"),
         ("Depositou", "Depositou"),
-        ("Retirou", "Retirou")
+        ("Retirou", "Retirou"),
+        ("Transferiu", "Transferiu"),
     )
     conta = models.ForeignKey(Conta, null=True, on_delete=models.SET_NULL)
     acoes = models.CharField(max_length=200, null=True, choices=ACOES)
     valor = models.FloatField(null=True)
+    obs = models.CharField(max_length=200, null=True)
+    parcelas = models.IntegerField(null=True, default=1)
 
     def __str__(self):
-        return self.acao + self.valor
+        return f"{self.obs} : R${str(self.valor)}"
