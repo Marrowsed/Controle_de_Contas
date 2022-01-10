@@ -51,6 +51,7 @@
                         <a class="collapse-item" href="login.html">Login</a>
                         <a class="collapse-item" href="register.html">Registre-se</a>
                         <a class="collapse-item" href="forgot-password.html">Esqueci a senha</a>
+                        <a class="collapse-item" href="{% url 'corrente' conta.id %}">Conta Corrente</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Outras Páginas:</h6>
                         <a class="collapse-item" href="{% url 'index' %}">Trocar de Banco</a>
@@ -131,12 +132,30 @@
                     <div class="row">
 
                         <!-- Earnings (Monthly) Card Example -->
+
+                        {% if conta.corrente == 0 %}
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card border-left-danger shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                                Conta Zerada !</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Conta Corrente</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.corrente}}</div>
                                         </div>
@@ -147,67 +166,16 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Limite de Crédito</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.credito}}</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                                Poupança</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.poupanca.valor}}</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                        </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div class="col-sm-12">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                <a class="btn btn-outline-success  btn-sm btn-block" href="{% url 'depositou' conta.id %}">Depositar</a>
-                                                <a class="btn btn-outline-danger  btn-sm btn-block" href="{% url 'retirou' conta.id %}">Retirar</a>
-                                                <a class="btn btn-outline-danger  btn-sm btn-block" href="{% url 'comprou' conta.id %}">Adicionar Compras</a>
-                                                <a class="btn btn-outline-warning  btn-sm btn-block" href="{% url 'pix' conta.id %}">Transferência / PIX</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                </div>
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                                {{form_retira.as_p}}
+                                {{form_extrato.as_p}}
+                        <input type="submit" value="Retirar" class="btn btn-outline-success  btn-sm btn-block">
+                        </form>
+                        {% endif %}
+
+
 
 
 
@@ -220,6 +188,9 @@
          <!--     End of Footer -->
         <!-- End of Content Wrapper -->
     <!-- End of Page Wrapper -->
+                </div>
+            </div>
+        </div>
 
 </body>
 </html>
