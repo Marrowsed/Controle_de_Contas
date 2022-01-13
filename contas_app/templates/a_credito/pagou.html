@@ -51,6 +51,7 @@
                         <a class="collapse-item" href="login.html">Login</a>
                         <a class="collapse-item" href="register.html">Registre-se</a>
                         <a class="collapse-item" href="forgot-password.html">Esqueci a senha</a>
+                        <a class="collapse-item" href="{% url 'credito' conta.id %}">Conta Credito</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Outras Páginas:</h6>
                         <a class="collapse-item" href="{% url 'index' %}">Trocar de Banco</a>
@@ -131,12 +132,14 @@
                     <div class="row">
 
                         <!-- Earnings (Monthly) Card Example -->
+
+
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card border-left-warning shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 Limite de Crédito</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.credito|floatformat:2}}</div>
                                         </div>
@@ -147,8 +150,24 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
+                        {% if fatura <= 0 %}
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Fatura</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">R$</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-warning shadow h-100 py-2">
                                 <div class="card-body">
@@ -156,57 +175,26 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 Fatura</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{fatura|floatformat:2}}</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">R$</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-danger shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                                Parceladas</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{parceladas|floatformat:2}}</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                        </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div class="col-sm-12">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                <a class="btn btn-outline-warning  btn-sm btn-block" href="{% url 'parcelou' conta.id %}">Adicionar Compra</a>
-                                                <a class="btn btn-outline-success  btn-sm btn-block" href="{% url 'parceladas' conta.id %}">Pagar Contas</a>
-                                                <a class="btn btn-outline-info  btn-sm btn-block" href="#">Verificar Parcelas</a>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                    {% endif %}
+                    <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                                {{form_pagou.as_p}}
+                                {{form_extrato.as_p}}
+                        <input type="submit" value="Pagar" class="btn btn-outline-success  btn-sm btn-block">
+                        </form>
+
+
+
 
 
 
@@ -219,6 +207,9 @@
          <!--     End of Footer -->
         <!-- End of Content Wrapper -->
     <!-- End of Page Wrapper -->
+                </div>
+            </div>
+        </div>
 
 </body>
 </html>
