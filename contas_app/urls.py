@@ -16,8 +16,9 @@ urlpatterns = [
     path('banco/poupanca/<str:pk>/resgatar', views.resgatar, name='resgatar'),
     path('banco/poupanca/<str:pk>/transferir', views.transferir, name='transferir'),
     #------CONTA CRÉDITO-----
-    path('credito/<str:pk>/comprar', views.credito, name='comprar'),
-    path('credito/<str:pk>/pagar', views.credito, name='pagar'),
+    path('credito/<str:pk>/parcelar', views.parcelou, name='parcelou'),
+    path('credito/<str:pk>/parceladas', views.parceladas, name='parceladas'),
+    path('credito/pagou/<str:pk>', views.pagou, name='pagou'),
     #------CONTA CORRENTE-----
     path('corrente/<str:pk>/depositar', views.depositou, name='depositou'),
     path('corrente/<str:pk>/retirar', views.retirou, name='retirou'),

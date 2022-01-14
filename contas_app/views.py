@@ -2,7 +2,7 @@ from django.db.models import F
 from django.shortcuts import render, redirect
 from .models import *
 from .form import AcionaPoupanca, ResgataPoupanca, ColocaExtrato, DepositaCorrente, RetiraCorrente, TransfereCorrente, \
-    CompraCorrente, CompraExtrato
+    CompraCorrente, CompraExtrato, ParcelouCredito, PagouCredito, PagouExtrato
 
 
 def banco(request, pk):
@@ -98,15 +98,6 @@ def transferir(request, pk):
     )
     ctx = {'conta': conta, 'nome': nome, 'poupanca': savings, 'form_transfere': form_transfere}
     return render(request, 'a_poupanca/transferir.html', ctx)
-
-
-def credito(request, pk):
-    nome = Cliente.objects.all().get(user=request.user)
-    conta = Conta.objects.all().get(id=pk)
-
-    ctx = {'conta': conta, 'nome': nome}
-
-    return render(request, 'credito.html', ctx)
 
 ####CORRENTE
 def corrente(request,pk):
@@ -216,3 +207,100 @@ def retirou(request,pk):
     ctx = {'conta': conta, 'nome': nome, "form_retira": form_retira, "form_extrato": form_extrato}
 
     return render(request, 'a_corrente/retirou.html', ctx)
+
+#####CRÉDITO
+def credito(request, pk):
+    nome = Cliente.objects.all().get(user=request.user)
+    conta = Conta.objects.all().get(id=pk)
+    extrato = conta.extrato_set.all()
+    fatura = 0
+    parcelaf = 0
+    for valor in extrato:
+        valorp = valor.valor_parcelado
+        valorf = valor.valor
+        fatura += valorp
+        parcelaf += valorf
+
+
+    ctx = {'conta': conta, 'nome': nome, 'fatura': fatura, 'parceladas': parcelaf}
+
+    return render(request, 'credito.html', ctx)
+
+def parcelou(request, pk):
+    nome = Cliente.objects.all().get(user=request.user)
+    conta = Conta.objects.all().get(id=pk)
+    extrato = conta.extrato_set.all()
+    fatura = 0
+    for valor in extrato:
+        valorf = valor.valor_parcelado
+        fatura += valorf
+
+    if request.method == "POST":
+        form_parcela = ParcelouCredito(request.POST)
+        form_extrato = CompraExtrato(request.POST)
+        if form_parcela.is_valid() and form_extrato.is_valid():
+            ext = form_extrato
+            valor_retirado = ext['valor'].value()
+            Conta.objects.filter(id=pk).update(credito=F('credito') - valor_retirado)
+            ext.save()
+            return redirect(f'/credito/{pk}')
+
+    form_parcela = ParcelouCredito(
+        initial={'cliente': conta.cliente.id}
+    )
+    form_extrato = CompraExtrato(
+        initial={'acoes': 'Parcelou', 'conta': pk}
+    )
+
+
+    ctx = {'conta': conta, 'nome': nome, 'fatura': fatura, 'form_parcela': form_parcela, 'form_extrato': form_extrato}
+
+    return render(request, 'a_credito/parcelou.html', ctx)
+
+def parceladas(request, pk):
+    nome = Cliente.objects.all().get(user=request.user)
+    conta = Conta.objects.all().get(id=pk)
+    extrato = conta.extrato_set.all()
+    fatura = 0
+    for valor in extrato:
+        valorf = valor.valor_parcelado
+        fatura += valorf
+
+
+    ctx = {'conta': conta, 'nome': nome, 'fatura': fatura, 'extrato': extrato}
+
+    return render(request, 'a_credito/parceladas.html', ctx)
+
+def pagou(request, pk):
+    nome = Cliente.objects.all().get(user=request.user)
+    extrato = Extrato.objects.all().get(id=pk)
+    conta = Conta.objects.all().get(extrato=extrato)
+    form_pagou = PagouCredito(instance=conta)
+    par_resto = extrato.parcelas
+
+    if request.method == "POST":
+        form_pagou = PagouCredito(request.POST, instance=conta)
+        form_extrato = PagouExtrato(request.POST, instance=extrato)
+        if form_pagou.is_valid() and form_extrato.is_valid():
+            ext = form_extrato
+            valor_pago = ext['valor_parcelado'].value()
+            parcelas = ext['parcelas'].value()
+            if par_resto >= int(parcelas):
+                Extrato.objects.filter(id=pk).update(parcelas=F('parcelas') - parcelas)
+                Extrato.objects.filter(id=pk).update(valor=F('valor') - (float(valor_pago) * int(parcelas)))
+                Extrato.objects.filter(id=pk).update(valor_parcelado=F('valor_parcelado') + (float(valor_pago) * int(parcelas)))
+                Conta.objects.filter(extrato=extrato).update(credito=F('credito') - (float(valor_pago) * int(parcelas)))
+                ext.save()
+            elif par_resto < 1:
+                extrato.delete()
+            else:
+                raise ValueError("ACIMA")
+            return redirect(f'/credito/{conta.id}')
+
+    form_extrato = PagouExtrato(
+        initial={'acoes': 'Pagou', 'conta': extrato.conta.id, 'obs': extrato.obs, 'valor_parcelado': extrato.valor_parcelado}
+    )
+
+    ctx = {'conta': conta, 'nome': nome, 'form_pagou': form_pagou, 'form_extrato': form_extrato}
+
+    return render(request, 'a_credito/pagou.html', ctx)

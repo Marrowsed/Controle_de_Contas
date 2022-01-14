@@ -45,6 +45,7 @@ class Extrato(models.Model):
         ("Resgatou", "Resgatou"),
         ("Comprou", "Comprou"),
         ("Parcelou", "Parcelou"),
+        ("Pagou", "Pagou"),
         ("Depositou", "Depositou"),
         ("Retirou", "Retirou"),
         ("Transferiu", "Transferiu"),
@@ -54,6 +55,12 @@ class Extrato(models.Model):
     valor = models.FloatField(null=True)
     obs = models.CharField(max_length=200, null=True)
     parcelas = models.IntegerField(null=True, default=1)
+    valor_parcelado = models.FloatField(null=True, default=1)
+
+    def save(self, *args, **kwargs):
+        if self.acoes == "Parcelou":
+            self.valor_parcelado = float(self.valor) / float(self.parcelas)
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.obs} : R${str(self.valor)}"

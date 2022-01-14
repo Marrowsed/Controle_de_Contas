@@ -48,14 +48,34 @@ class CompraCorrente (ModelForm):
         fields = "__all__"
         exclude = ['corrente', 'credito', 'poupanca', 'banco']
 
+#CONTA CRÉDITO
+class ParcelouCredito (ModelForm):
+    class Meta:
+        model = Conta
+        fields = "__all__"
+        exclude = ['corrente', 'credito', 'poupanca', 'banco']
+
+class PagouCredito (ModelForm):
+    class Meta:
+        model = Conta
+        fields = "__all__"
+        exclude = ['corrente', 'credito', 'poupanca', 'banco']
+
 #EXTRATO
 class ColocaExtrato (ModelForm):
     class Meta:
         model = Extrato
         fields = "__all__"
-        exclude = ['parcelas']
+        exclude = ['parcelas', 'valor_parcelado']
 
 class CompraExtrato (ModelForm):
     class Meta:
         model = Extrato
         fields = "__all__"
+        exclude = ['valor_parcelado']
+
+class PagouExtrato (ModelForm):
+    class Meta:
+        model = Extrato
+        fields = "__all__"
+        exclude = ['valor']
