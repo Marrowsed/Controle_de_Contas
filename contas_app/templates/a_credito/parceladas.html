@@ -218,14 +218,16 @@
 				</tr>
 
 				{% for ext in extrato %}
+                {% if ext.acoes == "Parcelou" %}
 					<tr>
-						<td><a class="btn btn-sm btn-danger" href="{% url 'pagou' ext.id %}">Pagar</a></td>
+						<td><a class="btn btn-sm btn-danger" href="{% url 'adiantar' ext.id %}">Pagar</a></td>
 						<td>{{ext.obs}}</td>
 						<td>{{ext.conta}}</td>
 						<td>R${{ext.valor}}</td>
 						<td>{{ext.parcelas}}</td>
                         <td>R${{ext.valor_parcelado}}</td>
 					</tr>
+                {% endif %}
 				{% endfor %}
 
 			</table>

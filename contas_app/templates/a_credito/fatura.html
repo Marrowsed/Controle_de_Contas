@@ -133,7 +133,6 @@
 
                         <!-- Earnings (Monthly) Card Example -->
 
-
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-warning shadow h-100 py-2">
                                 <div class="card-body">
@@ -158,7 +157,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Fatura</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">R$</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{fatura|floatformat:2}}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -175,7 +174,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 Fatura</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">R$</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{fatura|floatformat:2}}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -186,22 +185,24 @@
                         </div>
                     </div>
                     {% endif %}
-                    <form action="" method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                                {{form_pagou.as_p}}
-                                {{form_extrato.as_p}}
-                        <input type="submit" value="Pagar" class="btn btn-outline-success  btn-sm btn-block">
-                        </form>
-
-
-
-
-
-
-
                     <!-- Content Row -->
-
         </div>
+                <div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th></th>
+					<th>Conta</th>
+					<th>Valor</th>
+				</tr>
+
+					<tr>
+						<td><a class="btn btn-sm btn-danger" href="#">Pagar</a></td>
+						<td>{{conta.banco.nome}}</td>
+						<td>R${{fatura|floatformat:2}}</td>
+					</tr>
+
+			</table>
+		</div>
     <!-- Footer -->
             {% include 'footer.html' %}
          <!--     End of Footer -->
