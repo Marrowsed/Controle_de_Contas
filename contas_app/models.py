@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 class Banco(models.Model):
@@ -38,7 +39,6 @@ class Conta(models.Model):
     def __str__(self):
         return f"Conta do Banco: {self.banco.nome}"
 
-
 class Extrato(models.Model):
     ACOES = (
         ("Aplicou", "Aplicou"),
@@ -54,13 +54,17 @@ class Extrato(models.Model):
     acoes = models.CharField(max_length=200, null=True, choices=ACOES)
     valor = models.FloatField(null=True)
     obs = models.CharField(max_length=200, null=True)
-    parcelas = models.IntegerField(null=True, default=1)
-    valor_parcelado = models.FloatField(null=True, default=1)
+    parcelas = models.IntegerField(null=True, default=0)
+    valor_parcelado = models.FloatField(null=True, default=0)
+    meses = models.IntegerField(null=True, default=0)
 
     def save(self, *args, **kwargs):
         if self.acoes == "Parcelou":
             self.valor_parcelado = float(self.valor) / float(self.parcelas)
-            super().save(*args, **kwargs)
+        self.meses = (int(datetime.now().strftime("%m")) + int(self.parcelas))-1
+        if self.meses > 12:
+            self.meses = self.meses - 12
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.obs} : R${str(self.valor)}"
