@@ -63,7 +63,7 @@ class Extrato(models.Model):
             self.valor_parcelado = float(self.valor) / float(self.parcelas)
         self.meses = (int(datetime.now().strftime("%m")) + int(self.parcelas))-1
         if self.meses > 12:
-            self.meses = self.meses - 12
+            self.meses = int(self.meses) - 12
         super().save(*args, **kwargs)
 
     def __str__(self):
