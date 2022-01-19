@@ -66,16 +66,16 @@ class ColocaExtrato (ModelForm):
     class Meta:
         model = Extrato
         fields = "__all__"
-        exclude = ['parcelas', 'valor_parcelado']
+        exclude = ['parcelas', 'valor_parcelado', 'meses']
 
 class CompraExtrato (ModelForm):
     class Meta:
         model = Extrato
         fields = "__all__"
-        exclude = ['valor_parcelado']
+        exclude = ['valor_parcelado', 'meses']
 
 class PagouExtrato (ModelForm):
     class Meta:
         model = Extrato
         fields = "__all__"
-        exclude = ['valor']
+        exclude = ['valor', 'meses']
