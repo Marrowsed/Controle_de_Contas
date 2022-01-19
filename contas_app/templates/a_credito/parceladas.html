@@ -206,7 +206,8 @@
                     {% endif %}
                     <!-- Content Row -->
         </div>
-                <div class="card card-body">
+            <div class="card card-body">
+                {% for key, value in meses.items %}
 			<table class="table table-sm">
 				<tr>
 					<th></th>
@@ -216,8 +217,10 @@
 					<th>Parcelas</th>
                     <th>Valor Parcelas</th>
 				</tr>
-
-				{% for ext in extrato %}
+                <h4>{{key|upper}}</h4>
+                {% for l in lista %}
+                {% for ext in extrato %}
+                {% if l == value and ext.meses >= l %}
                 {% if ext.acoes == "Parcelou" %}
 					<tr>
 						<td><a class="btn btn-sm btn-danger" href="{% url 'adiantar' ext.id %}">Pagar</a></td>
@@ -228,8 +231,10 @@
                         <td>R${{ext.valor_parcelado}}</td>
 					</tr>
                 {% endif %}
-				{% endfor %}
-
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+                {% endfor %}
 			</table>
 		</div>
     <!-- Footer -->
